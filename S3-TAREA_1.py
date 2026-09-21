@@ -458,3 +458,556 @@ class AnalizadorPatrones:
             self.palabras.append(palabra)
 ap = AnalizadorPatrones()
 print(ap.agrupar_por_longitud("el gato está aquí"))
+
+# Ejercicios nuevos
+class TallerMecanico:
+    def __init__(self):
+        self.reparaciones = []
+    def registrar_reparacion(self, placa, falla, costo):
+        self.reparaciones.append({"placa": placa, "falla": falla, "costo": costo})
+    def costo_total_placa(self, placa):
+        total = 0
+        for r in self.reparaciones:
+            if r["placa"] == placa:
+                total += r["costo"]
+        return total
+    def fallas_caras(self, minimo):
+        resultado = []
+        for r in self.reparaciones:
+            if r["costo"] >= minimo:
+                resultado.append(r["falla"])
+        return resultado
+tm = TallerMecanico()
+tm.registrar_reparacion("ABC123", "frenos", 80)
+tm.registrar_reparacion("ABC123", "aceite", 25)
+tm.registrar_reparacion("XYZ9", "motor", 400)
+print(tm.costo_total_placa("ABC123"))
+print(tm.fallas_caras(50))
+
+
+class Cafeteria:
+    def __init__(self):
+        self.ordenes = []
+    def tomar_orden(self, cliente, bebida, precio):
+        self.ordenes.append({"cliente": cliente, "bebida": bebida, "precio": precio})
+    def total_cliente(self, cliente):
+        total = 0
+        for o in self.ordenes:
+            if o["cliente"] == cliente:
+                total += o["precio"]
+        return total
+    def bebidas_unicas(self):
+        resultado = set()
+        for o in self.ordenes:
+            resultado.add(o["bebida"])
+        return resultado
+cf = Cafeteria()
+cf.tomar_orden("Ana", "latte", 3.5)
+cf.tomar_orden("Ana", "muffin", 2.0)
+cf.tomar_orden("Luis", "espresso", 2.5)
+print(cf.total_cliente("Ana"))
+print(cf.bebidas_unicas())
+
+
+class EstacionClima:
+    def __init__(self):
+        self.registros = {}
+    def registrar_ciudad(self, ciudad, humedad, viento):
+        self.registros[ciudad] = {"humedad": humedad, "viento": viento}
+    def ciudad_mas_humeda(self):
+        if len(self.registros) == 0:
+            return None
+        mayor_ciudad = None
+        mayor = -1
+        for ciudad, datos in self.registros.items():
+            if datos["humedad"] > mayor:
+                mayor = datos["humedad"]
+                mayor_ciudad = ciudad
+        return mayor_ciudad
+    def ciudades_viento_alto(self, minimo):
+        resultado = []
+        for ciudad, datos in self.registros.items():
+            if datos["viento"] >= minimo:
+                resultado.append(ciudad)
+        return resultado
+ec = EstacionClima()
+ec.registrar_ciudad("Lima", 80, 12)
+ec.registrar_ciudad("Cusco", 55, 20)
+ec.registrar_ciudad("Arequipa", 40, 25)
+print(ec.ciudad_mas_humeda())
+print(ec.ciudades_viento_alto(18))
+
+
+class ClubLectura:
+    def __init__(self):
+        self.lecturas = {}
+    def registrar_lectura(self, socio, libro, paginas):
+        if socio not in self.lecturas:
+            self.lecturas[socio] = []
+        self.lecturas[socio].append({"libro": libro, "paginas": paginas})
+    def paginas_socio(self, socio):
+        if socio not in self.lecturas:
+            return 0
+        total = 0
+        for lectura in self.lecturas[socio]:
+            total += lectura["paginas"]
+        return total
+    def socio_mas_lector(self):
+        if len(self.lecturas) == 0:
+            return None
+        mayor_socio = None
+        mayor = -1
+        for socio in self.lecturas:
+            paginas = self.paginas_socio(socio)
+            if paginas > mayor:
+                mayor = paginas
+                mayor_socio = socio
+        return mayor_socio
+cl = ClubLectura()
+cl.registrar_lectura("Ana", "1984", 328)
+cl.registrar_lectura("Ana", "Fahrenheit", 158)
+cl.registrar_lectura("Bob", "Dune", 412)
+print(cl.paginas_socio("Ana"))
+print(cl.socio_mas_lector())
+
+
+class Granja:
+    def __init__(self):
+        self.animales = {}
+    def agregar_lote(self, especie, cantidad):
+        if especie in self.animales:
+            self.animales[especie] += cantidad
+        else:
+            self.animales[especie] = cantidad
+    def vender(self, especie, cantidad):
+        if especie not in self.animales:
+            return False
+        if self.animales[especie] < cantidad:
+            return False
+        self.animales[especie] -= cantidad
+        return True
+    def especies_escasas(self, minimo):
+        resultado = []
+        for especie, cantidad in self.animales.items():
+            if cantidad < minimo:
+                resultado.append(especie)
+        return resultado
+gr = Granja()
+gr.agregar_lote("gallinas", 40)
+gr.agregar_lote("vacas", 8)
+gr.vender("gallinas", 10)
+print(gr.especies_escasas(15))
+
+
+class RelojMundial:
+    def __init__(self):
+        self.zonas = {}
+    def agregar_zona(self, ciudad, diferencia):
+        self.zonas[ciudad] = diferencia
+    def hora_en(self, ciudad, hora_base):
+        if ciudad not in self.zonas:
+            return None
+        hora = (hora_base + self.zonas[ciudad]) % 24
+        return hora
+    def ciudades_adelantadas(self):
+        resultado = []
+        for ciudad, diferencia in self.zonas.items():
+            if diferencia > 0:
+                resultado.append(ciudad)
+        return resultado
+rw = RelojMundial()
+rw.agregar_zona("Lima", -5)
+rw.agregar_zona("Madrid", 1)
+rw.agregar_zona("Tokyo", 9)
+print(rw.hora_en("Tokyo", 10))
+print(rw.ciudades_adelantadas())
+
+
+class Museo:
+    def __init__(self):
+        self.obras = {}
+    def agregar_obra(self, titulo, artista, anio):
+        self.obras[titulo] = {"artista": artista, "anio": anio}
+    def obras_de_artista(self, artista):
+        resultado = []
+        for titulo, datos in self.obras.items():
+            if datos["artista"].lower() == artista.lower():
+                resultado.append(titulo)
+        return resultado
+    def obra_mas_antigua(self):
+        if len(self.obras) == 0:
+            return None
+        antigua = None
+        anio_min = None
+        for titulo, datos in self.obras.items():
+            if anio_min is None or datos["anio"] < anio_min:
+                anio_min = datos["anio"]
+                antigua = titulo
+        return antigua
+mu = Museo()
+mu.agregar_obra("Guernica", "Picasso", 1937)
+mu.agregar_obra("Las Meninas", "Velázquez", 1656)
+mu.agregar_obra("El viejo guitarrista", "Picasso", 1903)
+print(mu.obras_de_artista("Picasso"))
+print(mu.obra_mas_antigua())
+
+
+class LigaFutbol:
+    def __init__(self):
+        self.equipos = {}
+    def registrar_equipo(self, nombre):
+        if nombre not in self.equipos:
+            self.equipos[nombre] = {"puntos": 0, "goles": 0}
+    def sumar_partido(self, nombre, puntos, goles):
+        if nombre in self.equipos:
+            self.equipos[nombre]["puntos"] += puntos
+            self.equipos[nombre]["goles"] += goles
+    def lider(self):
+        if len(self.equipos) == 0:
+            return None
+        mejor = None
+        max_puntos = -1
+        for nombre, datos in self.equipos.items():
+            if datos["puntos"] > max_puntos:
+                max_puntos = datos["puntos"]
+                mejor = nombre
+        return mejor
+    def equipos_con_goles(self, minimo):
+        resultado = []
+        for nombre, datos in self.equipos.items():
+            if datos["goles"] >= minimo:
+                resultado.append(nombre)
+        return resultado
+lf = LigaFutbol()
+lf.registrar_equipo("A")
+lf.registrar_equipo("B")
+lf.sumar_partido("A", 3, 2)
+lf.sumar_partido("B", 1, 1)
+lf.sumar_partido("A", 1, 0)
+print(lf.lider())
+print(lf.equipos_con_goles(2))
+
+
+class Farmacia:
+    def __init__(self):
+        self.medicinas = {}
+    def agregar_medicina(self, nombre, precio, stock):
+        self.medicinas[nombre] = {"precio": precio, "stock": stock}
+    def vender(self, nombre, cantidad):
+        if nombre not in self.medicinas:
+            return False
+        if self.medicinas[nombre]["stock"] < cantidad:
+            return False
+        self.medicinas[nombre]["stock"] -= cantidad
+        return True
+    def medicinas_baratas(self, precio_max):
+        resultado = []
+        for nombre, datos in self.medicinas.items():
+            if datos["precio"] <= precio_max:
+                resultado.append(nombre)
+        return resultado
+far = Farmacia()
+far.agregar_medicina("paracetamol", 2.5, 40)
+far.agregar_medicina("ibuprofeno", 3.8, 10)
+print(far.vender("paracetamol", 5))
+print(far.medicinas_baratas(3))
+
+
+class DiarioViaje:
+    def __init__(self):
+        self.ciudades = []
+    def visitar(self, ciudad, dias, gasto):
+        self.ciudades.append({"ciudad": ciudad, "dias": dias, "gasto": gasto})
+    def gasto_total(self):
+        total = 0
+        for c in self.ciudades:
+            total += c["gasto"]
+        return total
+    def ciudad_mas_dias(self):
+        if len(self.ciudades) == 0:
+            return None
+        mayor = self.ciudades[0]
+        for c in self.ciudades:
+            if c["dias"] > mayor["dias"]:
+                mayor = c
+        return mayor["ciudad"]
+dv = DiarioViaje()
+dv.visitar("Cusco", 4, 180)
+dv.visitar("Arequipa", 2, 90)
+dv.visitar("Lima", 3, 150)
+print(dv.gasto_total())
+print(dv.ciudad_mas_dias())
+
+
+class EscuelaMusica:
+    def __init__(self):
+        self.alumnos = {}
+    def inscribir(self, nombre, instrumento):
+        self.alumnos[nombre] = instrumento
+    def alumnos_de_instrumento(self, instrumento):
+        resultado = []
+        for nombre, inst in self.alumnos.items():
+            if inst.lower() == instrumento.lower():
+                resultado.append(nombre)
+        return resultado
+    def instrumentos_unicos(self):
+        return set(self.alumnos.values())
+em = EscuelaMusica()
+em.inscribir("Ana", "piano")
+em.inscribir("Luis", "guitarra")
+em.inscribir("Eva", "piano")
+print(em.alumnos_de_instrumento("piano"))
+print(em.instrumentos_unicos())
+
+
+class EstacionamientoBicis:
+    def __init__(self):
+        self.bicis = {}
+    def estacionar(self, codigo, color, horas):
+        self.bicis[codigo] = {"color": color, "horas": horas}
+    def retirar(self, codigo):
+        if codigo in self.bicis:
+            del self.bicis[codigo]
+            return True
+        return False
+    def bicis_por_color(self, color):
+        resultado = []
+        for codigo, datos in self.bicis.items():
+            if datos["color"].lower() == color.lower():
+                resultado.append(codigo)
+        return resultado
+    def mas_tiempo(self):
+        if len(self.bicis) == 0:
+            return None
+        mayor_codigo = None
+        mayor = -1
+        for codigo, datos in self.bicis.items():
+            if datos["horas"] > mayor:
+                mayor = datos["horas"]
+                mayor_codigo = codigo
+        return mayor_codigo
+eb = EstacionamientoBicis()
+eb.estacionar("B1", "rojo", 2)
+eb.estacionar("B2", "azul", 5)
+eb.estacionar("B3", "rojo", 1)
+print(eb.bicis_por_color("rojo"))
+print(eb.mas_tiempo())
+
+
+class CatalogoCelulares:
+    def __init__(self):
+        self.modelos = {}
+    def agregar_modelo(self, nombre, marca, bateria):
+        self.modelos[nombre] = {"marca": marca, "bateria": bateria}
+    def modelos_de_marca(self, marca):
+        resultado = []
+        for nombre, datos in self.modelos.items():
+            if datos["marca"].lower() == marca.lower():
+                resultado.append(nombre)
+        return resultado
+    def mayor_bateria(self):
+        if len(self.modelos) == 0:
+            return None
+        mejor = None
+        mayor = -1
+        for nombre, datos in self.modelos.items():
+            if datos["bateria"] > mayor:
+                mayor = datos["bateria"]
+                mejor = nombre
+        return mejor
+ccel = CatalogoCelulares()
+ccel.agregar_modelo("Pixel 8", "Google", 4500)
+ccel.agregar_modelo("Galaxy S24", "Samsung", 4000)
+ccel.agregar_modelo("Pixel 9", "Google", 4700)
+print(ccel.modelos_de_marca("Google"))
+print(ccel.mayor_bateria())
+
+
+class CineClub:
+    def __init__(self):
+        self.asistencias = {}
+    def registrar_asistencia(self, socio, pelicula):
+        if socio not in self.asistencias:
+            self.asistencias[socio] = []
+        self.asistencias[socio].append(pelicula)
+    def peliculas_socio(self, socio):
+        return self.asistencias.get(socio, [])
+    def socio_mas_asistencias(self):
+        if len(self.asistencias) == 0:
+            return None
+        mayor_socio = None
+        mayor = -1
+        for socio, pelis in self.asistencias.items():
+            if len(pelis) > mayor:
+                mayor = len(pelis)
+                mayor_socio = socio
+        return mayor_socio
+cclub = CineClub()
+cclub.registrar_asistencia("Ana", "Dune")
+cclub.registrar_asistencia("Ana", "Matrix")
+cclub.registrar_asistencia("Luis", "Dune")
+print(cclub.peliculas_socio("Ana"))
+print(cclub.socio_mas_asistencias())
+
+
+class Pizzeria:
+    def __init__(self):
+        self.pizzas = {}
+    def agregar_pizza(self, nombre, ingredientes, precio):
+        self.pizzas[nombre] = {"ingredientes": list(ingredientes), "precio": precio}
+    def pizzas_con(self, ingrediente):
+        resultado = []
+        for nombre, datos in self.pizzas.items():
+            if ingrediente.lower() in [i.lower() for i in datos["ingredientes"]]:
+                resultado.append(nombre)
+        return resultado
+    def pizza_mas_cara(self):
+        if len(self.pizzas) == 0:
+            return None
+        cara = None
+        mayor = -1
+        for nombre, datos in self.pizzas.items():
+            if datos["precio"] > mayor:
+                mayor = datos["precio"]
+                cara = nombre
+        return cara
+pz = Pizzeria()
+pz.agregar_pizza("margarita", ["tomate", "queso", "albahaca"], 12)
+pz.agregar_pizza("hawaiana", ["tomate", "queso", "piña", "jamón"], 15)
+print(pz.pizzas_con("queso"))
+print(pz.pizza_mas_cara())
+
+
+class Observatorio:
+    def __init__(self):
+        self.estrellas = {}
+    def registrar_estrella(self, nombre, magnitud, constelacion):
+        self.estrellas[nombre] = {"magnitud": magnitud, "constelacion": constelacion}
+    def estrellas_de(self, constelacion):
+        resultado = []
+        for nombre, datos in self.estrellas.items():
+            if datos["constelacion"].lower() == constelacion.lower():
+                resultado.append(nombre)
+        return resultado
+    def mas_brillante(self):
+        if len(self.estrellas) == 0:
+            return None
+        mejor = None
+        menor_mag = None
+        for nombre, datos in self.estrellas.items():
+            if menor_mag is None or datos["magnitud"] < menor_mag:
+                menor_mag = datos["magnitud"]
+                mejor = nombre
+        return mejor
+ob = Observatorio()
+ob.registrar_estrella("Sirio", -1.46, "Can Mayor")
+ob.registrar_estrella("Betelgeuse", 0.42, "Orión")
+ob.registrar_estrella("Rigel", 0.13, "Orión")
+print(ob.estrellas_de("Orión"))
+print(ob.mas_brillante())
+
+
+class Lavanderia:
+    def __init__(self):
+        self.servicios = []
+    def registrar_servicio(self, cliente, kilos, precio_kilo):
+        self.servicios.append({
+            "cliente": cliente,
+            "kilos": kilos,
+            "precio_kilo": precio_kilo
+        })
+    def total_cliente(self, cliente):
+        total = 0
+        for s in self.servicios:
+            if s["cliente"] == cliente:
+                total += s["kilos"] * s["precio_kilo"]
+        return total
+    def kilos_totales(self):
+        total = 0
+        for s in self.servicios:
+            total += s["kilos"]
+        return total
+lv = Lavanderia()
+lv.registrar_servicio("Ana", 4, 2.5)
+lv.registrar_servicio("Ana", 2, 3.0)
+lv.registrar_servicio("Luis", 6, 2.5)
+print(lv.total_cliente("Ana"))
+print(lv.kilos_totales())
+
+
+class AgenciaAutos:
+    def __init__(self):
+        self.autos = {}
+    def publicar(self, modelo, anio, precio):
+        self.autos[modelo] = {"anio": anio, "precio": precio}
+    def autos_por_presupuesto(self, maximo):
+        resultado = []
+        for modelo, datos in self.autos.items():
+            if datos["precio"] <= maximo:
+                resultado.append(modelo)
+        return resultado
+    def auto_mas_nuevo(self):
+        if len(self.autos) == 0:
+            return None
+        nuevo = None
+        anio_max = -1
+        for modelo, datos in self.autos.items():
+            if datos["anio"] > anio_max:
+                anio_max = datos["anio"]
+                nuevo = modelo
+        return nuevo
+aa = AgenciaAutos()
+aa.publicar("Civic", 2018, 12000)
+aa.publicar("Corolla", 2021, 15000)
+aa.publicar("Spark", 2016, 7000)
+print(aa.autos_por_presupuesto(13000))
+print(aa.auto_mas_nuevo())
+
+
+class Guarderia:
+    def __init__(self):
+        self.ninos = {}
+    def inscribir(self, nombre, edad, aula):
+        self.ninos[nombre] = {"edad": edad, "aula": aula}
+    def ninos_de_aula(self, aula):
+        resultado = []
+        for nombre, datos in self.ninos.items():
+            if datos["aula"] == aula:
+                resultado.append(nombre)
+        return resultado
+    def edad_promedio(self):
+        if len(self.ninos) == 0:
+            return 0
+        return sum(d["edad"] for d in self.ninos.values()) / len(self.ninos)
+gd = Guarderia()
+gd.inscribir("Lucía", 4, "A")
+gd.inscribir("Mateo", 5, "A")
+gd.inscribir("Sofía", 3, "B")
+print(gd.ninos_de_aula("A"))
+print(gd.edad_promedio())
+
+
+class TiendaSemillas:
+    def __init__(self):
+        self.semillas = {}
+    def agregar(self, nombre, tipo, stock):
+        self.semillas[nombre] = {"tipo": tipo, "stock": stock}
+    def vender(self, nombre, cantidad):
+        if nombre not in self.semillas:
+            return False
+        if self.semillas[nombre]["stock"] < cantidad:
+            return False
+        self.semillas[nombre]["stock"] -= cantidad
+        return True
+    def por_tipo(self, tipo):
+        resultado = []
+        for nombre, datos in self.semillas.items():
+            if datos["tipo"].lower() == tipo.lower():
+                resultado.append(nombre)
+        return resultado
+ts = TiendaSemillas()
+ts.agregar("tomate", "hortaliza", 30)
+ts.agregar("girasol", "flor", 12)
+ts.agregar("lechuga", "hortaliza", 20)
+print(ts.vender("tomate", 5))
+print(ts.por_tipo("hortaliza"))
